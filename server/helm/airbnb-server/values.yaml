@@ -1,0 +1,89 @@
+# Default values for airbnb-server. This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/NAMESPACE/IMAGE_NAME
+  pullPolicy: IfNotPresent
+  tag: latest
+
+variables:
+  configmap: 
+    BCRYPT_SALT: "10"
+    COMPOSE_PROJECT_NAME: "amp_${resourceId}"
+    PORT: "3000"
+    AUTH0_AUDIENCE: "AUTH0_AUDIENCE"
+    AUTH0_ISSUER_URL: "AUTH0_ISSUER_URL"
+    JWT_SECRET_KEY: "Change_ME!!!"
+    JWT_EXPIRATION: "2d"
+    AWS_REGION: "us-east-1"
+    DB_URL: "postgres://admin:admin@localhost:5432/my-db"
+    DB_USER: "admin"
+    DB_PASSWORD: "admin"
+    DB_PORT: "5432"
+    DB_NAME: "my-db"
+    REDIS_HOST: "localhost"
+    REDIS_PORT: "6379"
+    REDIS_TTL: "5000"
+    REDIS_USERNAME: ""
+    REDIS_PASSWORD: ""
+  secret: {}
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+podSecurityContext: {}
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 3000
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: server.example.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-airbnb-server-tls
+  #    hosts:
+  #      - server.example.com
+
+# We usually recommend not to specify default resources and to leave this as a conscious
+# choice for the user. This also increases chances charts run on environments with little
+# resources, such as Minikube. If you do want to specify resources, uncomment the following
+# lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+# limits:
+#   cpu: 100m
+#   memory: 128Mi
+# requests:
+#   cpu: 100m
+#   memory: 128Mi
+resources: {}
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
